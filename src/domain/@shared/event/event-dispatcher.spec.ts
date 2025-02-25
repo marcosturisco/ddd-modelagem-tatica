@@ -1,3 +1,5 @@
+import PrintLogCustomerIsCreatedHandler01 from "../../customer/event/handler/print-log-when-customer-is-created.handler01";
+import PrintLogCustomerIsCreatedHandler02 from "../../customer/event/handler/print-log-when-customer-is-created.handler02";
 import SendEmailWhenProductIsCreatedHandler from "../../product/event/handler/send-email-when-product-is-created.handler";
 import ProductCreatedEvent from "../../product/event/product-created.event";
 import EventDispatcher from "./event-dispatcher";
@@ -17,6 +19,23 @@ describe("Domain events tests", () => {
     );
     expect(
       eventDispatcher.getEventHandlers["ProductCreatedEvent"][0]
+    ).toMatchObject(eventHandler);
+  });
+
+  it("should register an customer event handler01", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new PrintLogCustomerIsCreatedHandler01();
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler);
+
+    expect(
+      eventDispatcher.getEventHandlers["CustomerCreatedEvent"]
+    ).toBeDefined();
+    expect(eventDispatcher.getEventHandlers["CustomerCreatedEvent"].length).toBe(
+      1
+    );
+    expect(
+      eventDispatcher.getEventHandlers["CustomerCreatedEvent"][0]
     ).toMatchObject(eventHandler);
   });
 

@@ -13,6 +13,15 @@ export default class Order {
     this.validate();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      customer_id: this.customerId,
+      total: this.total(),
+      items: this.items.map(item => item.toJSON()),
+    };
+  }
+
   get id(): string {
     return this._id;
   }

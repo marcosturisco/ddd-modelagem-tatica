@@ -21,6 +21,16 @@ export default class OrderItem {
     this._total = this.total();
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      price: this.price,
+      quantity: this.quantity,
+      product_id: this.productId,
+    };
+  }
+
   get id(): string {
     return this._id;
   }
