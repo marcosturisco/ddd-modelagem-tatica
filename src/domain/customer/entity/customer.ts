@@ -40,7 +40,7 @@ export default class Customer {
     if (this._name.length === 0) {
       throw new Error("Name is required");
     }
-    //this._eventDispatcher.notify(new CustomerCreatedEvent({ name: "Customer Event" }));
+    this._eventDispatcher.notify(new CustomerCreatedEvent({ name: "Customer Event" }));
   }
 
   changeName(name: string) {
