@@ -1,4 +1,10 @@
 import Address from "../value-object/address";
+import EventDispatcher from "../../@shared/event/event-dispatcher";
+import EnviaConsoleLog1Handler from "../../customer/event/handler/print-log-when-customer-is-created.handler01";
+import EnviaConsoleLog2Handler from "../../customer/event/handler/print-log-when-customer-is-created.handler02";
+import CustomerCreatedEvent from "../event/customer-created.event";
+import AddressChangedEvent from "../event/address-changed.event";
+import EnviaConsoleLogHandler from "../event/handler/print-log-when-address-is-changed.handler";
 
 export default class Customer {
   private _id: string;
@@ -6,10 +12,12 @@ export default class Customer {
   private _address!: Address;
   private _active: boolean = false;
   private _rewardPoints: number = 0;
+  private _eventDispatcher = new EventDispatcher();
 
   constructor(id: string, name: string) {
     this._id = id;
     this._name = name;
+    this.prepareCustomerEvent();
     this.validate();
   }
 
@@ -32,6 +40,7 @@ export default class Customer {
     if (this._name.length === 0) {
       throw new Error("Name is required");
     }
+    //this._eventDispatcher.notify(new CustomerCreatedEvent({ name: "Customer Event" }));
   }
 
   changeName(name: string) {
@@ -42,9 +51,15 @@ export default class Customer {
   get Address(): Address {
     return this._address;
   }
-  
+
   changeAddress(address: Address) {
     this._address = address;
+    const addressChangedEvent = new AddressChangedEvent({
+      id: this._id,
+      name: this._name,
+      address: this._address
+    });
+    this._eventDispatcher.notify(addressChangedEvent);
   }
 
   isActive(): boolean {
@@ -68,5 +83,16 @@ export default class Customer {
 
   set Address(address: Address) {
     this._address = address;
+  }
+
+  // Registering the customer events
+  private prepareCustomerEvent() {
+    const eventHandlerAddress = new EnviaConsoleLogHandler();
+    const eventHandlerFirst = new EnviaConsoleLog1Handler();
+    const eventHandlerSecond = new EnviaConsoleLog2Handler();
+
+    this._eventDispatcher.register("AddressChangedEvent", eventHandlerAddress);
+    this._eventDispatcher.register("CustomerCreatedEvent", eventHandlerFirst);
+    this._eventDispatcher.register("CustomerCreatedEvent", eventHandlerSecond);
   }
 }

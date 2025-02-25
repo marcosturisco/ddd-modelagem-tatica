@@ -35,6 +35,22 @@ describe("Customer unit tests", () => {
     expect(customer.isActive()).toBe(true);
   });
 
+  it("should change address", () => {
+    const customer = new Customer("1", "Customer 1");
+    const address = new Address("Street 1", 123, "13330-250", "São Paulo");
+    customer.Address = address;
+
+    customer.activate();
+
+    expect(customer.isActive()).toBe(true);
+
+    const newAdress = new Address("Street 2", 456, "13330-500", "São Paulo");
+    
+    customer.changeAddress(newAdress);
+
+    expect(customer.Address._street).toBe("Street 2");
+  });
+
   it("should throw error when address is undefined when you activate a customer", () => {
     expect(() => {
       const customer = new Customer("1", "Customer 1");
@@ -51,6 +67,17 @@ describe("Customer unit tests", () => {
   });
 
   it("should add reward points", () => {
+    const customer = new Customer("1", "Customer 1");
+    expect(customer.rewardPoints).toBe(0);
+
+    customer.addRewardPoints(10);
+    expect(customer.rewardPoints).toBe(10);
+
+    customer.addRewardPoints(10);
+    expect(customer.rewardPoints).toBe(20);
+  });
+
+  it("should add dispatch the customer created event", () => {
     const customer = new Customer("1", "Customer 1");
     expect(customer.rewardPoints).toBe(0);
 
